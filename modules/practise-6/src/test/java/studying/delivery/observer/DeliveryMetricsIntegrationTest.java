@@ -104,6 +104,16 @@ class DeliveryMetricsIntegrationTest {
             assertEquals(1, statistics.successfulAttempts());
             assertEquals(1, statistics.temporaryFailures());
             assertEquals(1, statistics.permanentFailures());
+            var prometheusResponse = client.send(
+                    HttpRequest.newBuilder()
+                            .uri(URI.create("http://localhost:"
+                                    + port + "/prometheus"))
+                            .timeout(Duration.ofSeconds(10))
+                            .GET().build(),
+                    HttpResponse.BodyHandlers.ofString());
+            assertEquals(200, prometheusResponse.statusCode());
+            assertTrue(prometheusResponse.body()
+                    .contains("delivery_attempts_total"));
         }
     }
 

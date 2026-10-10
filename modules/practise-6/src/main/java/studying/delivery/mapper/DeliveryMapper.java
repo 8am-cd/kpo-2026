@@ -18,10 +18,19 @@ public final class DeliveryMapper {
 
     /**
      * Проверяет данные и создаёт снимок доставки.
+     * @param id идентификатор доставки
+     * @param notification уведомление
+     * @param policy политика повторов
+     * @param attemptsMade количество попыток
+     * @param status статус доставки
+     * @param nextAttemptAt время следующей попытки
      * @return проверенный снимок доставки
      */
-    public Delivery create(UUID id, Notification notification, RetryPolicy policy,
-                           int attemptsMade, DeliveryStatus status,
+    public Delivery create(UUID id,
+                           Notification notification,
+                           RetryPolicy policy,
+                           int attemptsMade,
+                           DeliveryStatus status,
                            Instant nextAttemptAt) {
         validator.validate(id, notification, policy, attemptsMade, status,
                 nextAttemptAt);

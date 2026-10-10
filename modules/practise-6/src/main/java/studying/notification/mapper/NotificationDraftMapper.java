@@ -16,10 +16,17 @@ public final class NotificationDraftMapper {
 
     /**
      * Проверяет поля и создаёт черновик уведомления.
+     * @param channel канал уведомления
+     * @param recipient получатель
+     * @param text текст сообщения
+     * @param createdAt время создания
+     * @param priority приоритет уведомления
      * @return проверенный черновик
      */
-    public NotificationDraft create(NotificationChannel channel, String recipient,
-                                    String text, LocalDateTime createdAt,
+    public NotificationDraft create(NotificationChannel channel,
+                                    String recipient,
+                                    String text,
+                                    LocalDateTime createdAt,
                                     NotificationPriority priority) {
         validator.validate(channel, recipient, text, createdAt, priority);
         return new NotificationDraft(channel, recipient, text, createdAt,

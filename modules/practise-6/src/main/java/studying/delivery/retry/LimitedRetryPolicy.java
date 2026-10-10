@@ -1,6 +1,7 @@
 package studying.delivery.retry;
 
 import java.time.Duration;
+import lombok.extern.slf4j.Slf4j;
 import studying.delivery.model.AttemptResult;
 
 /**
@@ -8,6 +9,7 @@ import studying.delivery.model.AttemptResult;
  * @param maxAttempts лимит попыток, включая первую
  * @param baseDelay положительная базовая задержка повтора
  */
+@Slf4j
 public record LimitedRetryPolicy(int maxAttempts, Duration baseDelay)
         implements RetryPolicy {
 

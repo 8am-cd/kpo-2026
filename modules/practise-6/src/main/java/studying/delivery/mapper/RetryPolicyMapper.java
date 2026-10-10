@@ -14,6 +14,8 @@ public final class RetryPolicyMapper {
 
     /**
      * Проверяет параметры и создаёт ограниченную политику повторов.
+     * @param maxAttempts максимальное число попыток
+     * @param baseDelay базовая задержка
      * @return проверенная политика повторов
      */
     public LimitedRetryPolicy limited(int maxAttempts, Duration baseDelay) {
@@ -23,6 +25,7 @@ public final class RetryPolicyMapper {
 
     /**
      * Проверяет задержку и создаёт решение о повторе.
+     * @param delay интервал ожидания перед следующей попыткой
      * @return решение назначить повтор
      */
     public studying.delivery.retry.RetryDecision.RetryAfter retryAfter(

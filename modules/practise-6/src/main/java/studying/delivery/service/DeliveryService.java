@@ -41,10 +41,12 @@ public final class DeliveryService {
      */
     public Delivery enqueue(Notification notification,
                             RetryPolicy policy, Instant readyAt) {
+
         validation.required(readyAt,
                 "Время готовности обязательно");
-        Delivery delivery = deliveryMapper.create(UUID.randomUUID(), notification,
-                policy, 0, DeliveryStatus.PENDING, readyAt);
+        Delivery delivery = deliveryMapper.create(
+                UUID.randomUUID(), notification,
+                policy, 1, DeliveryStatus.PENDING, readyAt);
         store.save(delivery);
         return delivery;
     }

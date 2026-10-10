@@ -18,12 +18,13 @@ import studying.exception.ApplicationErrorCode;
 /** Модульные тесты решений политик повторов. */
 @DisplayName("Политики повторов")
 class RetryPolicyTest {
-    private final RetryPolicyMapper mapper =
-            new RetryPolicyMapper(new RetryValidator(new DeliveryValidation()));
     private static final AttemptResult TEMPORARY = new AttemptResult(
             AttemptResult.Kind.TEMPORARY_FAILURE, "Сервис недоступен");
     private static final AttemptResult PERMANENT = new AttemptResult(
             AttemptResult.Kind.PERMANENT_FAILURE, "Адрес некорректен");
+
+    private final RetryPolicyMapper mapper =
+            new RetryPolicyMapper(new RetryValidator(new DeliveryValidation()));
 
     @Test
     @DisplayName("Без повторов любая ошибка прекращает доставку")

@@ -7,10 +7,12 @@ import java.util.EnumMap;
 import java.util.Locale;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import studying.delivery.event.DeliveryAttemptFinished;
 import studying.delivery.model.AttemptResult;
 
+@Slf4j
 /** Сохраняет статистику попыток в Micrometer для публикации через Actuator. */
 @Component
 @RequiredArgsConstructor
@@ -32,8 +34,10 @@ public final class DeliveryStatistics implements DeliveryObserver {
 
     @Override
     public void onAttemptFinished(DeliveryAttemptFinished event) {
+        log.info("started");
         registerCounters();
         counts.get(event.result().kind()).increment();
+        log.info("end");
     }
 
     /** @return число успешных попыток */
