@@ -1,6 +1,7 @@
 package studying.notification.services;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import studying.notification.enums.NotificationChannel;
 import studying.notification.factory.NotificationFactory;
@@ -8,8 +9,10 @@ import studying.notification.factory.impl.EmailNotificationFactory;
 import studying.notification.factory.impl.InAppNotificationFactory;
 import studying.notification.factory.impl.PushNotificationFactory;
 import studying.notification.validation.NotificationChannelValidator;
+import studying.profiling.TimedExecution;
 
 /** Выбирает фабрику по каналу уведомления. */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public final class NotificationFactoryResolver {

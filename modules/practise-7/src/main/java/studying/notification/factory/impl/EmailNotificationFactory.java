@@ -8,6 +8,7 @@ import studying.notification.model.EmailNotification;
 import studying.notification.model.Notification;
 import studying.notification.model.NotificationDraft;
 import studying.notification.validation.NotificationChannelValidator;
+import studying.profiling.TimedExecution;
 
 /** Создаёт уведомления по электронной почте через Lombok Builder. */
 @Service

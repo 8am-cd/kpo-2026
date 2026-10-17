@@ -20,7 +20,7 @@ import studying.delivery.sender.NotificationSender;
 import studying.delivery.validation.DeliveryValidation;
 import studying.delivery.validation.SenderValidator;
 import studying.exception.ApplicationErrorCode;
-import studying.notification.annot.Agrement;
+import studying.profiling.TimedExecution;
 import studying.notification.model.Notification;
 
 /** Управляет отправкой, повторами и оповещением наблюдателей. */
@@ -40,7 +40,7 @@ public final class DeliveryService {
      * @param readyAt время готовности первой попытки
      * @return начальный снимок состояния доставки
      */
-    @Agrement(operation = "test", logDetails = true)
+    @TimedExecution(operation = "test", logDetails = true)
     public Delivery enqueue(Notification notification,
                             RetryPolicy policy, Instant readyAt) {
 
@@ -58,7 +58,7 @@ public final class DeliveryService {
      * @param now время обработки, включая границу готовности
      * @return неизменяемый список сбоев наблюдателей за вызов
      */
-    @Agrement(operation = "test", logDetails = true)
+    @TimedExecution(operation = "test", logDetails = true)
     public List<ObserverFailure> processDue(Instant now) {
         validation.required(now,
                 "Время обработки обязательно");
