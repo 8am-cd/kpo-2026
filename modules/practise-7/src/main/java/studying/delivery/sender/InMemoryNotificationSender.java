@@ -8,9 +8,10 @@ import studying.delivery.model.AttemptResult;
 import studying.delivery.validation.DeliveryValidation;
 import studying.delivery.validation.SenderValidator;
 import studying.notification.model.Notification;
+import studying.profiling.TimedExecution;
 
 /** Отправитель с заданной последовательностью результатов для всех каналов. */
-public final class InMemoryNotificationSender implements NotificationSender {
+public class InMemoryNotificationSender implements NotificationSender {
     private final DeliveryValidation validation;
     private final SenderValidator senderValidator;
     private final Deque<AttemptResult> results;
@@ -33,7 +34,14 @@ public final class InMemoryNotificationSender implements NotificationSender {
         results = new ArrayDeque<>(List.copyOf(outcomes));
     }
 
+    /**
+     * Выполняет отправку с очередным заданным результатом.
+     * Переопределения должны сохранять порядок результатов и учёт вызовов.
+     * @param notification отправляемое уведомление
+     * @return следующий результат сценария
+     */
     @Override
+    @TimedExecution(operation = "notification.send")
     public AttemptResult send(Notification notification) {
         validation.required(notification,
                 "Уведомление обязательно");

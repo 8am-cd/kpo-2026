@@ -20,6 +20,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter:4.1.1")
     implementation("org.springframework.boot:spring-boot-starter-actuator:4.1.1")
     implementation("org.springframework.boot:spring-boot-starter-webmvc:4.1.1")
+    implementation("org.springframework.boot:spring-boot-starter-aspectj:4.1.1")
     implementation("io.micrometer:micrometer-registry-prometheus:1.17.1")
 
     compileOnly("org.projectlombok:lombok:1.18.42")

@@ -16,12 +16,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import studying.Main;
 import studying.delivery.model.AttemptResult;
 import studying.delivery.mapper.DeliveryMapper;
 import studying.delivery.repository.DeliveryRepository;
 import studying.delivery.retry.LimitedRetryPolicy;
 import studying.delivery.sender.InMemoryNotificationSender;
+import studying.delivery.sender.NotificationSender;
 import studying.delivery.service.DeliveryService;
 import studying.delivery.validation.DeliveryValidation;
 import studying.delivery.validation.SenderValidator;
@@ -35,10 +39,14 @@ import tools.jackson.databind.ObjectMapper;
 /** Проверяет публикацию статистики настоящих попыток через HTTP Actuator. */
 @SpringBootTest(classes = Main.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Import(DeliveryMetricsIntegrationTest.SenderConfiguration.class)
 @DisplayName("Метрики доставки в Actuator")
 class DeliveryMetricsIntegrationTest {
     @Autowired
     private DeliveryStatistics statistics;
+
+    @Autowired
+    private NotificationSender sender;
 
     @Autowired
     private DeliveryValidation validation;
@@ -64,15 +72,6 @@ class DeliveryMetricsIntegrationTest {
             assertCount(client, "success", 0);
             assertCount(client, "temporary_failure", 0);
             assertCount(client, "permanent_failure", 0);
-            InMemoryNotificationSender sender = new InMemoryNotificationSender(
-                    List.of(new AttemptResult(
-                                    AttemptResult.Kind.TEMPORARY_FAILURE,
-                                    "Сервис недоступен"),
-                            new AttemptResult(AttemptResult.Kind.SUCCESS, null),
-                            new AttemptResult(
-                                    AttemptResult.Kind.PERMANENT_FAILURE,
-                                    "Некорректный адрес")),
-                    validation, senderValidator);
             DeliveryService service = new DeliveryService(sender,
                     new DeliveryRepository(), List.of(statistics),
                     deliveryMapper, validation, senderValidator);
@@ -111,9 +110,42 @@ class DeliveryMetricsIntegrationTest {
                             .timeout(Duration.ofSeconds(10))
                             .GET().build(),
                     HttpResponse.BodyHandlers.ofString());
+            assertEquals(3.0, get(client, "/metrics/notification.send")
+                    .get("measurements").get(0).get("value").asDouble());
             assertEquals(200, prometheusResponse.statusCode());
             assertTrue(prometheusResponse.body()
                     .contains("delivery_attempts_total"));
+            assertTrue(prometheusResponse.body()
+                    .contains("notification_send_seconds_count"));
+            assertTrue(prometheusResponse.body()
+                    .contains("notification_send_seconds_bucket{"));
+            assertTrue(prometheusResponse.body().lines()
+                    .anyMatch(line -> line.startsWith(
+                            "notification_send_seconds_bucket{")
+                            && line.contains("le=\"+Inf\"")
+                            && line.endsWith(" 3")));
+        }
+    }
+
+    /** Создаёт Spring-компонент с аннотацией на методе send. */
+    @TestConfiguration(proxyBeanMethods = false)
+    static class SenderConfiguration {
+        /**
+         * Задаёт сценарий повтора и постоянной ошибки.
+         * @param validation проверка обязательных данных
+         * @param senderValidator проверка результатов
+         * @return отправитель для автоматического профилирования
+         */
+        @Bean
+        NotificationSender profiledSender(DeliveryValidation validation,
+                                         SenderValidator senderValidator) {
+            return new InMemoryNotificationSender(List.of(
+                    new AttemptResult(AttemptResult.Kind.TEMPORARY_FAILURE,
+                            "Сервис недоступен"),
+                    new AttemptResult(AttemptResult.Kind.SUCCESS, null),
+                    new AttemptResult(AttemptResult.Kind.PERMANENT_FAILURE,
+                            "Некорректный адрес")),
+                    validation, senderValidator);
         }
     }
 
