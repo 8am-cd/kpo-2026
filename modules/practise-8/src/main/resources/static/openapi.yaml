@@ -11,7 +11,7 @@ info:
     для сброса перезапустите приложение.
 servers:
   - url: http://localhost:8080/
-    description: Сервер, с которого загружена спецификация
+    description: Локальное приложение Spring Boot, порт 8080
 tags:
   - name: Доставки
     description: Создание и чтение состояния доставок
