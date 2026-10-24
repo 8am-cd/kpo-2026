@@ -35,7 +35,9 @@ public final class TimedExecutionAspect {
     @Around(value = "timedMethod(settings)", argNames = "call,settings")
     public Object profile(ProceedingJoinPoint call, TimedExecution settings)
             throws Throwable {
-        log.info("operation={} started", settings.operation());
+        if (settings.logDetails()) {
+            log.info("operation={} started", settings.operation());
+        }
         Timer timer = Timer.builder(settings.operation())
                 .publishPercentileHistogram()
                 .register(registry);
@@ -43,12 +45,14 @@ public final class TimedExecutionAspect {
         try {
             Object result = call.proceed();
             if (settings.logDetails()) {
-                log.info("operation={} result={}", settings.operation(), result);
+                log.info("operation={} result={}",
+                        settings.operation(), result);
             }
             return result;
         } catch (Throwable exception) {
             if (settings.logDetails()) {
-                log.error("operation={} failed", settings.operation(), exception);
+                log.error("operation={} failed",
+                        settings.operation(), exception);
             }
             throw exception;
         } finally {

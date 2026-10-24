@@ -9,7 +9,6 @@ import studying.notification.factory.impl.EmailNotificationFactory;
 import studying.notification.factory.impl.InAppNotificationFactory;
 import studying.notification.factory.impl.PushNotificationFactory;
 import studying.notification.validation.NotificationChannelValidator;
-import studying.profiling.TimedExecution;
 
 /** Выбирает фабрику по каналу уведомления. */
 @Slf4j

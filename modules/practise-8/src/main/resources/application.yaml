@@ -2,6 +2,12 @@ server:
   port: 8080
 
 spring:
+  jackson:
+    deserialization:
+      accept-float-as-int: false
+    datatype:
+      enum:
+        fail-on-numbers-for-enums: true
   application:
     name: notification-delivery
 

@@ -2,7 +2,6 @@ package studying.notification.factory.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import studying.notification.annot.Agrement;
 import studying.notification.enums.NotificationChannel;
 import studying.notification.factory.NotificationFactory;
 import studying.notification.model.Notification;

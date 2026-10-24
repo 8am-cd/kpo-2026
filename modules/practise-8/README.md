@@ -8,13 +8,13 @@
 
 ## Что уже есть в заготовке
 
-Модуль скопирован из практики 7. Его исходный код, тесты и конфигурация сохранены; реализацию задания нужно добавить самостоятельно.
+Модуль содержит реализацию задания на основе практики 7. Ниже описаны требования для самостоятельного выполнения; в качестве исходной заготовки используйте код практики 7, а реализацию этого модуля — для разбора и проверки решений.
 
 - `NotificationDraftMapper` проверяет данные черновика, а `NotificationFactoryResolver` выбирает фабрику по каналу `EMAIL`, `PUSH` или `IN_APP`.
 - `DeliveryService.enqueue(...)` ставит доставку в очередь; `processDue(now)` выполняет не более одной попытки для каждой готовой доставки за вызов.
 - `DeliveryRepository` хранит снимки доставок в памяти и предоставляет `find(id)` и `findAll()`.
 - `RetryPolicy` определяет повторы, `DeliveryObserver` получает события попыток, `@TimedExecution` включает профилирование.
-- Spring Boot и Spring Web MVC уже подключены. Однако HTTP-контроллеров нет, а `Main` запускает демонстрацию профилирования. `DeliveryService`, репозиторий и отправитель пока не зарегистрированы как Spring beans.
+- В исходной практике 7 уже подключены Spring Boot и Spring Web MVC. В практике 8 добавлены контроллеры, DTO, сервис приложения, обработчик ошибок и конфигурация Spring. `Main` запускает HTTP-сервер.
 
 ## MVC в этой работе
 
@@ -201,3 +201,26 @@ curl -i -X POST http://localhost:8080/api/delivery-processing
 После первого запуска обработки ожидайте `PENDING` с одной попыткой. Повторите обработку не раньше чем через 10 секунд и прочитайте доставку по `GET /api/deliveries/{id}`: ожидается `SUCCEEDED` с двумя попытками. Для повторения всей демонстрации перезапустите приложение.
 
 **Работа готова**, когда выполняется эта цепочка, перечисленные проверки проходят, а контроллеры отвечают только за HTTP. На разборе объясните: почему JSON DTO не является доменной моделью; где выбирается `404`; какие классы изменятся при добавлении HTML-представления; что ещё пришлось бы изменить для строгого соблюдения Clean Architecture.
+
+## Навигация по реализации
+
+- [DeliveryController](src/main/java/studying/delivery/controller/DeliveryController.java) — создание и чтение через HTTP.
+- [DeliveryProcessingController](src/main/java/studying/delivery/controller/DeliveryProcessingController.java) — запуск обработки.
+- [DeliveryApplicationService](src/main/java/studying/delivery/application/DeliveryApplicationService.java) — сборка сценариев, часы и общий замок.
+- [DeliveryConfiguration](src/main/java/studying/config/DeliveryConfiguration.java) — сборка зависимостей и учебный отправитель.
+- [ApiExceptionHandler](src/main/java/studying/web/ApiExceptionHandler.java) — перевод ошибок в HTTP.
+- [DeliveryApiIntegrationTest](src/test/java/studying/delivery/controller/DeliveryApiIntegrationTest.java) — HTTP-сценарии, повторы, ошибки и параллельные запросы.
+
+В заготовке исправлены отсутствующий импорт, несовместимость `final DeliveryService` с AOP и логирование при отключённом `logDetails`. Добавлены зависимости валидации и MVC-тестов. Dockerfile использует JAR практики 8.
+
+## OpenAPI и Swagger UI
+
+После запуска приложения:
+
+- [Swagger UI](http://localhost:8080/swagger-ui.html) — описание API и выполнение запросов через **Try it out**.
+- [OpenAPI YAML](http://localhost:8080/openapi.yaml) — спецификация для Swagger Editor, Postman и других клиентов.
+- [Исходный файл спецификации](src/main/resources/static/openapi.yaml) — OpenAPI 3.0.3 с контрактами четырёх операций, схемами DTO, примерами и ошибками.
+
+Swagger UI загружается из CDN и требует интернета. Сам YAML отдаётся приложением и доступен без интернета. Спецификация поддерживается явно: при изменении API обновляйте её вместе с контроллерами и DTO.
+
+Для демонстрации создайте одну доставку через POST, скопируйте `id`, вызовите обработку и прочитайте состояние. Повторите обработку через 10 секунд. Учебный отправитель рассчитан на две фактические отправки; после исчерпания перезапустите приложение.

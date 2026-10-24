@@ -25,7 +25,7 @@ import studying.notification.model.Notification;
 
 /** Управляет отправкой, повторами и оповещением наблюдателей. */
 @RequiredArgsConstructor
-public final class DeliveryService {
+public class DeliveryService {
     private final NotificationSender sender;
     private final DeliveryRepository store;
     private final List<DeliveryObserver> observers;
@@ -40,7 +40,7 @@ public final class DeliveryService {
      * @param readyAt время готовности первой попытки
      * @return начальный снимок состояния доставки
      */
-    @TimedExecution(operation = "test", logDetails = true)
+    @TimedExecution(operation = "delivery.enqueue", logDetails = true)
     public Delivery enqueue(Notification notification,
                             RetryPolicy policy, Instant readyAt) {
 
@@ -58,7 +58,7 @@ public final class DeliveryService {
      * @param now время обработки, включая границу готовности
      * @return неизменяемый список сбоев наблюдателей за вызов
      */
-    @TimedExecution(operation = "test", logDetails = true)
+    @TimedExecution(operation = "delivery.process", logDetails = true)
     public List<ObserverFailure> processDue(Instant now) {
         validation.required(now,
                 "Время обработки обязательно");

@@ -3,12 +3,12 @@
 Запуск из корня репозитория:
 
 ```bash
-./gradlew :modules:practise-7:bootJar
-docker compose -f modules/practise-7/docker-compose.yml up -d --build
+./gradlew :modules:practise-8:bootJar
+docker compose -f modules/practise-8/docker-compose.yml up -d --build
 ```
 
 Перед сборкой Docker-образа нужно пересобрать JAR: Dockerfile использует
-`build/libs/practise-7.jar`, созданный Gradle.
+`build/libs/practise-8.jar`, созданный Gradle.
 Контейнер приложения занимает порт 8080; остановите локальный запуск из IDE,
 если он использует этот порт.
 
@@ -49,13 +49,13 @@ Logstash читает JSON из общего volume `application_logs`, вклю
 ```bash
 curl 'http://localhost:9200/notification-delivery-*/_count'
 curl 'http://localhost:9200/notification-delivery-*/_search?size=5&pretty'
-docker compose -f modules/practise-7/docker-compose.yml logs --tail=100 logstash
+docker compose -f modules/practise-8/docker-compose.yml logs --tail=100 logstash
 ```
 
 Остановка с сохранением данных:
 
 ```bash
-docker compose -f modules/practise-7/docker-compose.yml down
+docker compose -f modules/practise-8/docker-compose.yml down
 ```
 
 Это локальная учебная конфигурация: Elasticsearch и Kibana доступны только

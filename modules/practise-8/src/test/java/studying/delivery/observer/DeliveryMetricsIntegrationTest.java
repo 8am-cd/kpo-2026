@@ -19,6 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Primary;
 import studying.Main;
 import studying.delivery.model.AttemptResult;
 import studying.delivery.mapper.DeliveryMapper;
@@ -137,6 +138,7 @@ class DeliveryMetricsIntegrationTest {
          * @return отправитель для автоматического профилирования
          */
         @Bean
+        @Primary
         NotificationSender profiledSender(DeliveryValidation validation,
                                          SenderValidator senderValidator) {
             return new InMemoryNotificationSender(List.of(

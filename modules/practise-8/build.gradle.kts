@@ -20,6 +20,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter:4.1.1")
     implementation("org.springframework.boot:spring-boot-starter-actuator:4.1.1")
     implementation("org.springframework.boot:spring-boot-starter-webmvc:4.1.1")
+    implementation("org.springframework.boot:spring-boot-starter-validation:4.1.1")
     implementation("org.springframework.boot:spring-boot-starter-aspectj:4.1.1")
     implementation("io.micrometer:micrometer-registry-prometheus:1.17.1")
 
@@ -31,6 +32,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-params")
     testImplementation("org.mockito:mockito-junit-jupiter:5.20.0")
     testImplementation("org.springframework.boot:spring-boot-starter-test:4.1.1")
+    testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test:4.1.1")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
