@@ -11,6 +11,9 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/modules" />
             <option value="$PROJECT_DIR$/modules/practise-10" />
+            <option value="$PROJECT_DIR$/modules/practise-10-res" />
+            <option value="$PROJECT_DIR$/modules/practise-10-res/gateway" />
+            <option value="$PROJECT_DIR$/modules/practise-10-res/telegram-service" />
             <option value="$PROJECT_DIR$/modules/practise-4" />
             <option value="$PROJECT_DIR$/modules/practise-5" />
             <option value="$PROJECT_DIR$/modules/practise-6" />
